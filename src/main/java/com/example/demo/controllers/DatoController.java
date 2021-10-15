@@ -22,19 +22,23 @@ public class DatoController {
 
     @GetMapping("/api/dato")
     public DatosListDTO getAll(){
-        List<DatosDevueltos> listado = service.findAll();
-        if (listado == null){
+        DatosDevueltos ret = null;
+        try {
+            List<DatosDevueltos> listado = service.findAll();
+            return new DatosListDTO(false, listado, "");
+        }catch (Exception e){
             return new DatosListDTO(true, null, "Ha habido un problema con la BBDD");
         }
-        return new DatosListDTO(false, listado, "");
     }
     @PostMapping("/api/dato")
     public DatosDevueltosDTO postDato(@RequestBody @Valid DatosDevueltosSinID datosDevueltosSinID){
-        DatosDevueltos ret = service.save(datosDevueltosSinID);
-        if (ret == null){
+        DatosDevueltos ret = null;
+        try {
+            ret = service.save(datosDevueltosSinID);
+            return new DatosDevueltosDTO(false, ret, "");
+        }catch (Exception e){
             return new DatosDevueltosDTO(true, null, "Problema al añadir");
         }
-        return new DatosDevueltosDTO(false, ret, "");
     }
     @GetMapping("/api/dato/{id}")
     public DatosDevueltosDTO getByID(@PathVariable Long id){
